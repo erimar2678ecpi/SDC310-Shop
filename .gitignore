@@ -1,6 +1,37 @@
-vendor/
+# Environment files
 .env
-node_modules/
-.DS_Store
-.idea/
+.env.*
+!.env.example
+
+# Composer
+/vendor/
 composer.lock
+
+# Package managers
+/node_modules/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Application files
+/logs/
+/cache/
+*.log
+
+# Keep SQL schema and seed
+*.sql
+!schema.sql
+!seed.sql
+!sample_data.sql
