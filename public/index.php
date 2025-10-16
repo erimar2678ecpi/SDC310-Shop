@@ -1,24 +1,19 @@
 <?php
 declare(strict_types=1);
 
-
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 session_start();
 
-// Try Composer autoload first, otherwise register a small PSR-4 fallback.
-$composer = __DIR__ . '/../vendor/autoload.php';
-if (is_file($composer)) {
-    require $composer;
-} else {
-    // Minimal PSR-4 autoloader for App\ namespace -> src/
-    spl_autoload_register(function ($class) {
-        $prefix = 'App\\';
-        $base_dir = __DIR__ . '/../src/';
-        if (strncmp($prefix, $class, strlen($prefix)) !== 0) return;
-        $relative = substr($class, strlen($prefix));
-        $file = $base_dir . str_replace('\\', '/', $relative) . '.php';
-        if (is_file($file)) require $file;
-    });
-}
+// Minimal PSR-4 autoloader for App\ namespace -> src/
+spl_autoload_register(function ($class) {
+    $prefix = 'App\\';
+    $base_dir = __DIR__ . '/../src/';
+    if (strncmp($prefix, $class, strlen($prefix)) !== 0) return;
+    $relative = substr($class, strlen($prefix));
+    $file = $base_dir . str_replace('\\', '/', $relative) . '.php';
+    if (is_file($file)) require $file;
+});
 
 $envFile = __DIR__ . '/../.env';
 if (is_file($envFile)) {
@@ -42,7 +37,9 @@ $config = require __DIR__ . '/../config/config.php';
 
 $router = new App\Core\Router($config);
 $router->get('/', [App\Controllers\CatalogController::class, 'index']);
-$router->get('/cart', [App\Controllers\CartController::class, 'view']);
+$router->get('/cart', [App\Controllers\CartController::class, 'viewCart']);
+$router->post('/cart/add', [App\Controllers\CartController::class, 'add']);
+$router->post('/cart/remove', [App\Controllers\CartController::class, 'remove']);
 
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
