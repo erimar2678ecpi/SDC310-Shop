@@ -13,6 +13,7 @@ CREATE TABLE products (
   name VARCHAR(200) NOT NULL,
   description TEXT,
   price DECIMAL(10,2) NOT NULL,
+  quantity INT NOT NULL DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
 );
@@ -21,7 +22,8 @@ CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
-  name VARCHAR(200)
+  name VARCHAR(200),
+  is_admin TINYINT(1) NOT NULL DEFAULT 0
 );
 
 CREATE TABLE orders (

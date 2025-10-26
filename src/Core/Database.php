@@ -61,4 +61,9 @@ final class Database
         return $this->query('SELECT id, name, price, description, category_id FROM products')
             ->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function lastInsertId(): string
+    {
+        return $this->pdo->lastInsertId();
+    }
 }

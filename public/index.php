@@ -40,6 +40,17 @@ $router->get('/', [App\Controllers\CatalogController::class, 'index']);
 $router->get('/cart', [App\Controllers\CartController::class, 'viewCart']);
 $router->post('/cart/add', [App\Controllers\CartController::class, 'add']);
 $router->post('/cart/remove', [App\Controllers\CartController::class, 'remove']);
+$router->post('/cart/update', [App\Controllers\CartController::class, 'update']);
+$router->post('/cart/checkout', [App\Controllers\CartController::class, 'checkout']);
+$router->get('/admin/login', [App\Controllers\AuthController::class, 'showLogin']);
+$router->post('/admin/login', [App\Controllers\AuthController::class, 'login']);
+$router->post('/admin/logout', [App\Controllers\AuthController::class, 'logout']);
+$router->get('/admin/products', [App\Controllers\Admin\ProductController::class, 'index']);
+$router->get('/admin/products/create', [App\Controllers\Admin\ProductController::class, 'create']);
+$router->post('/admin/products', [App\Controllers\Admin\ProductController::class, 'store']);
+$router->get('/admin/products/edit', [App\Controllers\Admin\ProductController::class, 'edit']);
+$router->post('/admin/products/update', [App\Controllers\Admin\ProductController::class, 'update']);
+$router->post('/admin/products/delete', [App\Controllers\Admin\ProductController::class, 'destroy']);
 
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
