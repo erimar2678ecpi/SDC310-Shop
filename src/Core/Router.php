@@ -11,11 +11,10 @@ final class Router
     {
         $path = parse_url($uri, PHP_URL_PATH) ?: '/';
         $handler = $this->routes[$method][$path] ?? null;
-        
-        if (!$handler) { 
-            http_response_code(404); 
-            echo 'Not Found'; 
-            return; 
+
+        if (!$handler) {
+            $this->renderError('errors/404', 404);
+            return;
         }
 
         try {
@@ -30,9 +29,45 @@ final class Router
                 $handler(); 
             }
         } catch (\Throwable $e) {
-            error_log('Router error: ' . $e->getMessage());
-            http_response_code(500);
-            echo 'Internal Server Error';
+            $this->logError($e, $method, $path);
+            $this->renderError('errors/500', 500);
         }
+    }
+
+    private function renderError(string $template, int $status): void
+    {
+        http_response_code($status);
+
+        $data = [
+            'title' => $status === 404 ? 'Page Not Found' : 'Something Went Wrong',
+            'flash' => Flash::consume(),
+            'base_path' => $this->config['base_path'] ?? '',
+            'auth' => [
+                'is_admin' => $_SESSION['is_admin'] ?? false,
+                'user_name' => $_SESSION['user_name'] ?? null
+            ],
+            'csrf_token' => Csrf::token()
+        ];
+
+        View::render($template, $data);
+    }
+
+    private function logError(\Throwable $e, string $method, string $path): void
+    {
+        $context = [
+            'method' => $method,
+            'path' => $path,
+            'query' => $_SERVER['QUERY_STRING'] ?? '',
+            'user_id' => $_SESSION['user_id'] ?? null,
+            'ip' => $_SERVER['REMOTE_ADDR'] ?? null
+        ];
+
+        error_log(sprintf(
+            'Router error: %s | context=%s',
+            $e->getMessage(),
+            json_encode($context, JSON_THROW_ON_ERROR)
+        ));
+
+        error_log($e->getTraceAsString());
     }
 }
