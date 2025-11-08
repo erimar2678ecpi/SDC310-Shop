@@ -1,7 +1,7 @@
 <h2>Catalog</h2>
 
 <?php if (!empty($flash ?? [])): ?>
-    <div class="flash">
+    <div class="flash" role="status" aria-live="polite">
         <?php foreach ($flash as $type => $messages): ?>
             <?php foreach ($messages as $message): ?>
                 <p class="flash__message flash__message--<?= htmlspecialchars($type) ?>"><?= htmlspecialchars($message) ?></p>
@@ -24,18 +24,23 @@
                 <h3><?= htmlspecialchars($product['name']) ?></h3>
                 <p class="product__description"><?= htmlspecialchars($product['description'] ?? 'No description provided.') ?></p>
                 <p class="product__price">$<?= number_format($product['price'], 2) ?></p>
-                <p class="product__inventory">In stock: <?= htmlspecialchars((string)$product['quantity']) ?></p>
+                <?php $available = (int)$product['quantity']; ?>
+                <?php if ($available === 0): ?>
+                    <p class="product__inventory is-empty" aria-live="polite">Out of stock</p>
+                <?php else: ?>
+                    <p class="product__inventory">In stock: <?= htmlspecialchars((string)$available) ?></p>
+                <?php endif; ?>
                 <p class="product__incart">In cart: <?= $cart[$product['id']] ?? 0 ?></p>
                 <div class="product__actions">
                     <form method="post" action="<?= htmlspecialchars(($base_path ?? '') . '/cart/add') ?>">
                         <input type="hidden" name="id" value="<?= htmlspecialchars($product['id']) ?>">
                         <input type="hidden" name="_token" value="<?= htmlspecialchars($csrf_token) ?>">
-                        <button type="submit" class="btn">Add</button>
+                        <button type="submit" class="btn" <?= $available === 0 ? 'disabled aria-disabled="true"' : '' ?> aria-label="Add <?= htmlspecialchars($product['name']) ?> to cart">Add</button>
                     </form>
                     <form method="post" action="<?= htmlspecialchars(($base_path ?? '') . '/cart/remove') ?>">
                         <input type="hidden" name="id" value="<?= htmlspecialchars($product['id']) ?>">
                         <input type="hidden" name="_token" value="<?= htmlspecialchars($csrf_token) ?>">
-                        <button type="submit" class="btn remove">Remove</button>
+                        <button type="submit" class="btn remove" aria-label="Remove <?= htmlspecialchars($product['name']) ?> from cart">Remove</button>
                     </form>
                 </div>
             </div>

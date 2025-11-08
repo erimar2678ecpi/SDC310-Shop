@@ -30,8 +30,8 @@ Thumbs.db
 /cache/
 *.log
 
-# Keep SQL schema and seed
+# Keep SQL schema and seed (tracked in sql/)
 *.sql
-!schema.sql
-!seed.sql
-!sample_data.sql
+!sql/schema.sql
+!sql/seed.sql
+!sql/sample_data.sql

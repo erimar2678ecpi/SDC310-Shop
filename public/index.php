@@ -38,6 +38,7 @@ $config = require __DIR__ . '/../config/config.php';
 $router = new App\Core\Router($config);
 $router->get('/', [App\Controllers\CatalogController::class, 'index']);
 $router->get('/cart', [App\Controllers\CartController::class, 'viewCart']);
+$router->get('/cart/checkout', [App\Controllers\CartController::class, 'confirm']);
 $router->post('/cart/add', [App\Controllers\CartController::class, 'add']);
 $router->post('/cart/remove', [App\Controllers\CartController::class, 'remove']);
 $router->post('/cart/update', [App\Controllers\CartController::class, 'update']);
